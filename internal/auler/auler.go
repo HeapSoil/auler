@@ -1,10 +1,12 @@
 package auler
 
 import (
-	"encoding/json"
+	"errors"
 	"fmt"
+	"net/http"
 
 	"github.com/HeapSoil/auler/internal/pkg/log"
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -58,10 +60,27 @@ func NewAulerCommand() *cobra.Command {
 // 实际的业务代码入口函数
 func run() error {
 
-	settings, _ := json.Marshal(viper.AllSettings())
+	// 初始化Gin：运行模式debug，创建引擎
+	gin.SetMode(viper.GetString("runmode"))
+	g := gin.New()
 
-	log.Infow(string(settings))
-	log.Infow(viper.GetString("db.username"))
+	// Handler注册：404，/healthz
+	g.NoRoute(func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"code": 10003, "message": "Page not found."})
+	})
+
+	g.GET("/healthz", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+	})
+
+	// 创建HTTP Server实例
+	httpsrv := &http.Server{Addr: viper.GetString("addr"), Handler: g}
+
+	// 初步运行HTTP服务器
+	log.Infow("Start to listening the incoming requests on http address", "addr", viper.GetString("addr"))
+	if err := httpsrv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		log.Fatalw(err.Error())
+	}
 
 	return nil
 }
