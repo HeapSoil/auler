@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/HeapSoil/auler/internal/pkg/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -22,6 +23,11 @@ func NewAulerCommand() *cobra.Command {
 		SilenceUsage: true,
 		// Run函数
 		RunE: func(cmd *cobra.Command, args []string) error {
+
+			// 初始化日志包的logger，在应用退出时将缓存中的日志写入磁盘防止丢失
+			log.Init(logOptionsFromDefaultConfig())
+			defer log.Sync()
+
 			return run()
 		},
 		// 命令运行时不，设置需要指定命令行参数
@@ -53,9 +59,9 @@ func NewAulerCommand() *cobra.Command {
 func run() error {
 
 	settings, _ := json.Marshal(viper.AllSettings())
-	fmt.Println(string(settings))
-	fmt.Println(viper.GetString("db.username"))
 
-	fmt.Println("Hello Auler!")
+	log.Infow(string(settings))
+	log.Infow(viper.GetString("db.username"))
+
 	return nil
 }
