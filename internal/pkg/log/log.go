@@ -1,9 +1,11 @@
 package log
 
 import (
+	"context"
 	"sync"
 	"time"
 
+	"github.com/HeapSoil/auler/internal/pkg/utils"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -151,4 +153,28 @@ func Fatalw(msg string, keysAndValues ...interface{}) {
 
 func (l *zapLogger) Fatalw(msg string, keysAndValues ...interface{}) {
 	l.z.Sugar().Fatalw(msg, keysAndValues...)
+}
+
+// 日志包的对外方法，用std尝试从ctx获取期望的key，对含有X-Request-ID的添加到日志
+// C 解析传入的 context，尝试提取关注的键值，并添加到 zap.Logger 结构化日志中.
+func C(ctx context.Context) *zapLogger {
+	return std.C(ctx)
+}
+
+func (l *zapLogger) C(ctx context.Context) *zapLogger {
+	// 为防止异步污染，对每个请求都深拷贝*zapLogger
+	lc := l.clone()
+
+	if reqID := ctx.Value(utils.XRequestIDKey); reqID != nil {
+		lc.z = lc.z.With(zap.Any(utils.XRequestIDKey, reqID))
+	}
+
+	return lc
+
+}
+
+// 为防止异步污染，对每个请求都深拷贝*zapLogger
+func (l *zapLogger) clone() *zapLogger {
+	lc := *l
+	return &lc
 }

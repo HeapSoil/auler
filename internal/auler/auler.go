@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/HeapSoil/auler/internal/pkg/log"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	mw "github.com/HeapSoil/auler/internal/pkg/middleware"
+
+	"github.com/HeapSoil/auler/internal/pkg/log"
 )
 
 var cfgFile string
@@ -64,12 +67,20 @@ func run() error {
 	gin.SetMode(viper.GetString("runmode"))
 	g := gin.New()
 
+	// 添加中间件
+	// gin.Recovery(): 用来捕获任何 panic，并恢复
+	// mw.RequestID(): 为每个请求的Header复用或创建X-Request-ID
+	mws := []gin.HandlerFunc{gin.Recovery(), mw.RequestID()}
+
+	g.Use(mws...)
+
 	// Handler注册：404，/healthz
 	g.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"code": 10003, "message": "Page not found."})
 	})
 
 	g.GET("/healthz", func(c *gin.Context) {
+		log.C(c).Infow("Healthz function called")
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
 
