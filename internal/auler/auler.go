@@ -70,7 +70,7 @@ func run() error {
 	// 添加中间件
 	// gin.Recovery(): 用来捕获任何 panic，并恢复
 	// mw.RequestID(): 为每个请求的Header复用或创建X-Request-ID
-	mws := []gin.HandlerFunc{gin.Recovery(), mw.RequestID()}
+	mws := []gin.HandlerFunc{gin.Recovery(), mw.NoCache, mw.Cors, mw.Secure, mw.RequestID()}
 
 	g.Use(mws...)
 
