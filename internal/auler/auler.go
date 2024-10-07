@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"github.com/HeapSoil/auler/internal/pkg/errs"
 	mw "github.com/HeapSoil/auler/internal/pkg/middleware"
 
 	"github.com/HeapSoil/auler/internal/pkg/log"
@@ -81,12 +82,12 @@ func run() error {
 
 	// Handler注册：404，/healthz
 	g.NoRoute(func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"code": 10003, "message": "Page not found."})
+		errs.WriteResponse(c, errs.ErrPageNotFound, nil)
 	})
 
 	g.GET("/healthz", func(c *gin.Context) {
 		log.C(c).Infow("Healthz function called")
-		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+		errs.WriteResponse(c, nil, map[string]string{"status": "ok"})
 	})
 
 	// 创建HTTP Server实例
