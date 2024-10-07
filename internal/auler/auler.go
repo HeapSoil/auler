@@ -1,9 +1,14 @@
 package auler
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
@@ -89,9 +94,32 @@ func run() error {
 
 	// 初步运行HTTP服务器
 	log.Infow("Start to listening the incoming requests on http address", "addr", viper.GetString("addr"))
-	if err := httpsrv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-		log.Fatalw(err.Error())
+	// 非阻塞的goroutine启动阻塞服务
+	go func() {
+		if err := httpsrv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalw(err.Error())
+		}
+	}()
+
+	// channel接受系统信号
+	quit := make(chan os.Signal, 1)
+	// 捕获ctrl+c和kill <pid>信号
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	// 阻塞主程序，接受信号后执行
+	<-quit
+	log.Infow("Shutting down server...")
+
+	// ctx创建，通知服务器处理完目前请求后关闭服务
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// 10 秒内关闭服务（将未处理完的请求处理完再关闭服务），超过 10 秒就超时退出
+	if err := httpsrv.Shutdown(ctx); err != nil {
+		log.Errorw("Insevure Server forced to showdown", "err", err)
+		return err
 	}
+
+	log.Infow("Server exiting")
 
 	return nil
 }
