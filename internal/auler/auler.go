@@ -69,6 +69,10 @@ func NewAulerCommand() *cobra.Command {
 // 实际的业务代码入口函数
 func run() error {
 
+	if err := initStore(); err != nil {
+		return err
+	}
+
 	// 初始化Gin：运行模式debug，创建引擎
 	gin.SetMode(viper.GetString("runmode"))
 	g := gin.New()
