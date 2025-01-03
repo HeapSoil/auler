@@ -169,6 +169,10 @@ func (l *zapLogger) C(ctx context.Context) *zapLogger {
 		lc.z = lc.z.With(zap.Any(utils.XRequestIDKey, reqID))
 	}
 
+	if userID := ctx.Value(utils.XUsernameKey); userID != nil {
+		lc.z = lc.z.With(zap.Any(utils.XUsernameKey, userID))
+	}
+
 	return lc
 
 }

@@ -14,8 +14,9 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/HeapSoil/auler/internal/pkg/errs"
 	mw "github.com/HeapSoil/auler/internal/pkg/middleware"
+	"github.com/HeapSoil/auler/internal/pkg/utils"
+	"github.com/HeapSoil/auler/pkg/token"
 
 	"github.com/HeapSoil/auler/internal/pkg/log"
 )
@@ -73,7 +74,7 @@ func run() error {
 		return err
 	}
 
-	// 初始化Gin：运行模式debug，创建引擎
+	token.Init(viper.GetString("jwt-secret"), utils.XUsernameKey) // 初始化Gin：运行模式debug，创建引擎
 	gin.SetMode(viper.GetString("runmode"))
 	g := gin.New()
 
@@ -84,15 +85,9 @@ func run() error {
 
 	g.Use(mws...)
 
-	// Handler注册：404，/healthz
-	g.NoRoute(func(c *gin.Context) {
-		errs.WriteResponse(c, errs.ErrPageNotFound, nil)
-	})
-
-	g.GET("/healthz", func(c *gin.Context) {
-		log.C(c).Infow("Healthz function called")
-		errs.WriteResponse(c, nil, map[string]string{"status": "ok"})
-	})
+	if err := installRouters(g); err != nil {
+		return err
+	}
 
 	// 创建HTTP Server实例
 	httpsrv := &http.Server{Addr: viper.GetString("addr"), Handler: g}

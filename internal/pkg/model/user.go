@@ -1,6 +1,11 @@
 package model
 
-import "time"
+import (
+	"time"
+
+	"github.com/HeapSoil/auler/pkg/auth"
+	"gorm.io/gorm"
+)
 
 type UserM struct {
 	ID        int64     `gorm:"column:id;primary_key"` //
@@ -16,4 +21,13 @@ type UserM struct {
 // TableName sets the insert table name for this struct type
 func (u *UserM) TableName() string {
 	return "user"
+}
+
+// BeforeCreate 在创建数据库记录之前加密明文密码，调用pkg/authn.
+func (u *UserM) BeforeCreate(tx *gorm.DB) (err error) {
+	u.Password, err = auth.Encrypt(u.Password)
+	if err != nil {
+		return err
+	}
+	return nil
 }
