@@ -76,7 +76,7 @@ func ParseRequest(c *gin.Context) (string, error) {
 
 	// 从请求头中取出token
 	var t string
-	fmt.Sprintf(header, "Bearer %s", &t)
+	fmt.Sscanf(header, "Bearer %s", &t)
 	return Parse(t, config.key)
 }
 
