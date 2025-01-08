@@ -9,7 +9,7 @@ type UserInfo struct {
 	CreatedAt string `json:"createdAt"`
 	UpdatedAt string `json:"updatedAt"`
 	// 未开发
-	PostCount int64 `json:"postCount"`
+	// PostCount int64 `json:"postCount"`
 }
 
 // CreateUserRequest 指定了 `POST /v1/users` 接口的请求参数.

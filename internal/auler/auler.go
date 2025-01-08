@@ -89,37 +89,82 @@ func run() error {
 		return err
 	}
 
-	// 创建HTTP Server实例
-	httpsrv := &http.Server{Addr: viper.GetString("addr"), Handler: g}
+	// 创建 HTTP Server 实例 与 HTTPS Server 实例
+	httpsrv := startServerHTTP(g)
+	httpssrv := startServerHTTPS(g)
 
 	// 初步运行HTTP服务器
-	log.Infow("Start to listening the incoming requests on http address", "addr", viper.GetString("addr"))
+	// log.Infow("Start to listening the incoming requests on http address", "addr", viper.GetString("addr"))
 	// 非阻塞的goroutine启动阻塞服务
-	go func() {
-		if err := httpsrv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatalw(err.Error())
-		}
-	}()
 
 	// channel接受系统信号
-	quit := make(chan os.Signal, 1)
+	// quit := make(chan os.Signal, 1)
+	quit := make(chan os.Signal)
 	// 捕获ctrl+c和kill <pid>信号
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	// 阻塞主程序，接受信号后执行
 	<-quit
 	log.Infow("Shutting down server...")
 
-	// ctx创建，通知服务器处理完目前请求后关闭服务
+	// ctx创建，通知服务器 goroutine 处理完目前请求后关闭服务，限时10s
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	// 10 秒内关闭服务（将未处理完的请求处理完再关闭服务），超过 10 秒就超时退出
 	if err := httpsrv.Shutdown(ctx); err != nil {
-		log.Errorw("Insevure Server forced to showdown", "err", err)
+		log.Errorw("Insecure Server forced to showdown", "err", err)
+		return err
+	}
+	if err := httpssrv.Shutdown(ctx); err != nil {
+		log.Errorw("Secure Server forced to showdown", "err", err)
 		return err
 	}
 
 	log.Infow("Server exiting")
 
 	return nil
+}
+
+// startServerHTTP 创建 HTTP 服务器，并运行
+func startServerHTTP(g *gin.Engine) *http.Server {
+	// 创建 HTTP 服务器实例
+	httpsrv := &http.Server{
+		Addr:    viper.GetString("addr"),
+		Handler: g,
+	}
+
+	log.Infow("Start to listening the incoming requests on http address", "addr", viper.GetString("addr"))
+
+	// 在 goroutine 中启动 HTTP 服务器
+	go func() {
+		if err := httpsrv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalw(err.Error())
+		}
+	}()
+
+	return httpsrv
+}
+
+// startServerHTTPS 创建 HTTPS 服务器，并运行
+func startServerHTTPS(g *gin.Engine) *http.Server {
+	// 创建 HTTPS 服务器实例
+	httpssrv := &http.Server{
+		Addr:    viper.GetString("tls.addr"),
+		Handler: g,
+	}
+
+	log.Infow("Start to listening the incoming requests on https address", "addr", viper.GetString("tls.addr"))
+
+	// 获取 cert 和 key 存储位置
+	certLoc, keyLoc := viper.GetString("tls.cert"), viper.GetString("tls.key")
+	if certLoc != "" && keyLoc != "" {
+		go func() {
+			if err := httpssrv.ListenAndServeTLS(certLoc, keyLoc); err != nil && !errors.Is(err, http.ErrServerClosed) {
+				log.Fatalw(err.Error())
+			}
+		}()
+	}
+
+	return httpssrv
+
 }
