@@ -50,7 +50,6 @@ func (u *users) Update(ctx context.Context, user *model.UserM) error {
 	return u.db.Save(user).Error
 }
 
-
 func (u *users) List(ctx context.Context, offset, limit int) (count int64, ret []*model.UserM, err error) {
 	err = u.db.Offset(offset).Limit(defaultLimit(limit)).Order("id desc").Find(&ret).
 		Offset(-1).

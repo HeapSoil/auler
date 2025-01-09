@@ -114,8 +114,8 @@ type ListUserRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Limit  *int64 `protobuf:"varint,1,opt,name=limit,proto3,oneof" json:"limit,omitempty"`
-	Offset *int64 `protobuf:"varint,2,opt,name=offset,proto3,oneof" json:"offset,omitempty"`
+	Limit  int64 `protobuf:"varint,1,opt,name=limit,proto3,oneof" json:"limit,omitempty"`
+	Offset int64 `protobuf:"varint,2,opt,name=offset,proto3,oneof" json:"offset,omitempty"`
 }
 
 func (x *ListUserRequest) Reset() {
@@ -151,15 +151,23 @@ func (*ListUserRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListUserRequest) GetLimit() int64 {
-	if x != nil && x.Limit != nil {
-		return *x.Limit
+	// if x != nil && x.Limit != nil {
+	// 	return x.Limit
+	// }
+	// return 0
+	if x != nil {
+		return x.Limit
 	}
 	return 0
 }
 
 func (x *ListUserRequest) GetOffset() int64 {
-	if x != nil && x.Offset != nil {
-		return *x.Offset
+	// if x != nil && x.Offset != nil {
+	// 	return *x.Offset
+	// }
+	// return 0
+	if x != nil {
+		return x.Offset
 	}
 	return 0
 }

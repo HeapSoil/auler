@@ -123,11 +123,11 @@ func (b *userBiz) Get(ctx context.Context, username string) (*v1.GetUserResponse
 	return &resp, nil
 }
 
-func (b *userBiz) List(ctx context.Context, offset, limit int) (*v1.ListUserResponse, error){
+func (b *userBiz) List(ctx context.Context, offset, limit int) (*v1.ListUserResponse, error) {
 	count, list, err := b.ds.Users().List(ctx, offset, limit)
 	if err != nil {
 		log.C(ctx).Errorw("Failed to list users from storage", "err", err)
-		return nil, err 
+		return nil, err
 	}
 
 	users := make([]*v1.UserInfo, 0, len(list))
