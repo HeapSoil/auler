@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -13,8 +14,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"google.golang.org/grpc"
 
+	"github.com/HeapSoil/auler/internal/auler/controller/v1/user"
+	"github.com/HeapSoil/auler/internal/auler/store"
 	mw "github.com/HeapSoil/auler/internal/pkg/middleware"
+	pb "github.com/HeapSoil/auler/pkg/proto/auler/v1"
 	"github.com/HeapSoil/auler/internal/pkg/utils"
 	"github.com/HeapSoil/auler/pkg/token"
 
@@ -89,9 +94,11 @@ func run() error {
 		return err
 	}
 
-	// 创建 HTTP Server 实例 与 HTTPS Server 实例
+	// 创建 HTTP Server 实例、HTTPS Server gPRC Server 实例
 	httpsrv := startServerHTTP(g)
 	httpssrv := startServerHTTPS(g)
+	grpcsrv := startServerGRPC()
+
 
 	// 初步运行HTTP服务器
 	// log.Infow("Start to listening the incoming requests on http address", "addr", viper.GetString("addr"))
@@ -99,7 +106,7 @@ func run() error {
 
 	// channel接受系统信号
 	// quit := make(chan os.Signal, 1)
-	quit := make(chan os.Signal)
+	quit := make(chan os.Signal, 1)
 	// 捕获ctrl+c和kill <pid>信号
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	// 阻塞主程序，接受信号后执行
@@ -119,6 +126,8 @@ func run() error {
 		log.Errorw("Secure Server forced to showdown", "err", err)
 		return err
 	}
+
+	grpcsrv.GracefulStop()
 
 	log.Infow("Server exiting")
 
@@ -166,5 +175,30 @@ func startServerHTTPS(g *gin.Engine) *http.Server {
 	}
 
 	return httpssrv
+
+}
+
+// startServerGRPC 创建 gRPC 服务器，并运行
+func startServerGRPC() *grpc.Server {
+	lis, err := net.Listen("tcp", viper.GetString("grpc.addr"))
+	if err != nil {
+		log.Fatalw("Failed to listen", "err", err)
+	}
+
+	// 创建 GRPC 服务器
+	grpcsrv := grpc.NewServer()
+	pb.RegisterAulerServer(grpcsrv, user.New(store.S, nil))
+
+
+	// 在 goroutine 中启动 HTTP 服务器
+	log.Infow("Start to listening the incoming requests on grpc address", "addr", viper.GetString("grpc.addr"))
+
+	go func(){
+		if err := grpcsrv.Serve(lis); err!=nil {
+			log.Fatalw(err.Error())
+		}
+	}()
+
+	return grpcsrv
 
 }

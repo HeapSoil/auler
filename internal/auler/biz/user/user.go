@@ -7,6 +7,7 @@ import (
 
 	"github.com/HeapSoil/auler/internal/auler/store"
 	"github.com/HeapSoil/auler/internal/pkg/errs"
+	"github.com/HeapSoil/auler/internal/pkg/log"
 	"github.com/HeapSoil/auler/internal/pkg/model"
 	v1 "github.com/HeapSoil/auler/pkg/api/auler/v1"
 	"github.com/HeapSoil/auler/pkg/auth"
@@ -25,6 +26,8 @@ type UserBiz interface {
 	ChangePassword(ctx context.Context, username string, r *v1.ChangePasswordRequest) error
 	// 获取用户信息业务（登陆后获取）
 	Get(ctx context.Context, username string) (*v1.GetUserResponse, error)
+	// 罗列用户业务
+	List(ctx context.Context, offset, limit int) (*v1.ListUserResponse, error)
 }
 
 type userBiz struct {
@@ -118,4 +121,30 @@ func (b *userBiz) Get(ctx context.Context, username string) (*v1.GetUserResponse
 	resp.UpdatedAt = user.UpdatedAt.Format("2024-10-02 17:14:55")
 
 	return &resp, nil
+}
+
+func (b *userBiz) List(ctx context.Context, offset, limit int) (*v1.ListUserResponse, error){
+	count, list, err := b.ds.Users().List(ctx, offset, limit)
+	if err != nil {
+		log.C(ctx).Errorw("Failed to list users from storage", "err", err)
+		return nil, err 
+	}
+
+	users := make([]*v1.UserInfo, 0, len(list))
+	for _, item := range list {
+		user := item
+		users = append(users, &v1.UserInfo{
+			Username:  user.Username,
+			Nickname:  user.Nickname,
+			Email:     user.Email,
+			Phone:     user.Email,
+			CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt: user.UpdatedAt.Format("2006-01-02 15:04:05"),
+		})
+	}
+
+	log.C(ctx).Debugw("Get users from backend storage", "count", len(users))
+
+	return &v1.ListUserResponse{TotalCount: count, Users: users}, nil
+
 }

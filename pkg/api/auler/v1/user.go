@@ -43,3 +43,17 @@ type ChangePasswordRequest struct {
 // 获取用户信息: 返回参数
 // GetUserResponse：指定了 `GET /v1/users/{name}` 接口的返回参数.
 type GetUserResponse UserInfo
+
+
+// 罗列用户: 指定请求参数和返回参数
+// ListUserRequest: 指定了 `GET /v1/users` 接口的请求参数.
+type ListUserRequest struct {
+	Offset int `form:"offset"`
+	Limit  int `form:"limit"`
+}
+
+// ListUserResponse: 指定了 `GET /v1/users` 接口的返回参数.
+type ListUserResponse struct {
+	TotalCount int64       `json:"totalCount"`
+	Users      []*UserInfo `json:"users"`
+}

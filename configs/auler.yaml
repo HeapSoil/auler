@@ -4,6 +4,8 @@ addr: :6060   # HTTP 服务器监听地址
 jwt-secret: Rtg8BPKNEf2mB4mgvKONGPZZQSaJWNLijxR42qRgq0iBb5 # JWT 签发密钥
 
 # MySQL 数据库相关配置
+grpc:
+  addr: :9090 # gRPC 服务器监听地址
 db:
   host: 127.0.0.1  # MySQL 机器 IP 和端口，默认 127.0.0.1:3306
   username: auler # MySQL 用户名(建议授权最小权限集)
