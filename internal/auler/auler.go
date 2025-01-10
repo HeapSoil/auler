@@ -19,8 +19,8 @@ import (
 	"github.com/HeapSoil/auler/internal/auler/controller/v1/user"
 	"github.com/HeapSoil/auler/internal/auler/store"
 	mw "github.com/HeapSoil/auler/internal/pkg/middleware"
-	pb "github.com/HeapSoil/auler/pkg/proto/auler/v1"
 	"github.com/HeapSoil/auler/internal/pkg/utils"
+	pb "github.com/HeapSoil/auler/pkg/proto/auler/v1"
 	"github.com/HeapSoil/auler/pkg/token"
 
 	"github.com/HeapSoil/auler/internal/pkg/log"
@@ -98,7 +98,6 @@ func run() error {
 	httpsrv := startServerHTTP(g)
 	httpssrv := startServerHTTPS(g)
 	grpcsrv := startServerGRPC()
-
 
 	// 初步运行HTTP服务器
 	// log.Infow("Start to listening the incoming requests on http address", "addr", viper.GetString("addr"))
@@ -189,12 +188,11 @@ func startServerGRPC() *grpc.Server {
 	grpcsrv := grpc.NewServer()
 	pb.RegisterAulerServer(grpcsrv, user.New(store.S, nil))
 
-
 	// 在 goroutine 中启动 HTTP 服务器
 	log.Infow("Start to listening the incoming requests on grpc address", "addr", viper.GetString("grpc.addr"))
 
-	go func(){
-		if err := grpcsrv.Serve(lis); err!=nil {
+	go func() {
+		if err := grpcsrv.Serve(lis); err != nil {
 			log.Fatalw(err.Error())
 		}
 	}()

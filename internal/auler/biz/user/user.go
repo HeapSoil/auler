@@ -30,10 +30,10 @@ type UserBiz interface {
 	List(ctx context.Context, offset, limit int) (*v1.ListUserResponse, error)
 
 	// 更新用户信息业务
-	Update(ctx context.Context, username string, r *v1.UpdateUserRequest) error 
+	Update(ctx context.Context, username string, r *v1.UpdateUserRequest) error
 
 	// 管理员删除用户信息
-	Delete(ctx context.Context, username string) error 
+	Delete(ctx context.Context, username string) error
 }
 
 type userBiz struct {
@@ -156,40 +156,38 @@ func (b *userBiz) List(ctx context.Context, offset, limit int) (*v1.ListUserResp
 
 }
 
-
 // 更新用户信息业务逻辑
 func (b *userBiz) Update(ctx context.Context, username string, userToUpdate *v1.UpdateUserRequest) error {
 	userM, err := b.ds.Users().Get(ctx, username)
 	if err != nil {
-		return err 
+		return err
 	}
 
 	// 复制 get 到的用户信息给用户数据模型 userM
-	if user.Email != nil {
-		userM.Email = *user.Email
+	if userToUpdate.Email != nil {
+		userM.Email = *userToUpdate.Email
 	}
 
-	if user.Nickname != nil {
-		userM.Nickname = *user.Nickname
+	if userToUpdate.Nickname != nil {
+		userM.Nickname = *userToUpdate.Nickname
 	}
 
-	if user.Phone != nil {
-		userM.Phone = *user.Phone
+	if userToUpdate.Phone != nil {
+		userM.Phone = *userToUpdate.Phone
 	}
 
 	if err := b.ds.Users().Update(ctx, userM); err != nil {
-		return err 
+		return err
 	}
 
-	return nil 
+	return nil
 }
-
 
 // 删除用户信息业务逻辑
 func (b *userBiz) Delete(ctx context.Context, username string) error {
 	if err := b.ds.Users().Delete(ctx, username); err != nil {
-		return err 
+		return err
 	}
-	
-	return nil 
+
+	return nil
 }
