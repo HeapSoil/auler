@@ -1,8 +1,8 @@
 package store
 
 import (
+	"errors"
 	"context"
-
 	"github.com/HeapSoil/auler/internal/pkg/model"
 	"gorm.io/gorm"
 )
@@ -16,6 +16,9 @@ type UserStore interface {
 	Update(ctx context.Context, user *model.UserM) error
 	// 需要罗列用户方法，返回个数和每个用户
 	List(ctx context.Context, offset, limit int) (int64, []*model.UserM, error)
+
+	// 管理员删除用户
+	Delete(ctx context.Context, username string) error 
 }
 
 // users是UserStore接口的视线
@@ -58,4 +61,15 @@ func (u *users) List(ctx context.Context, offset, limit int) (count int64, ret [
 		Error
 
 	return
+}
+
+
+// Delete 根据 username 删除数据库对应的用户记录
+func (u *users) Delete(ctx context.Context, username string) error {
+	err := u.db.Where("username = ?", username).Delete(&model.UserM{}).Error 
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound){
+		return err 
+	}
+	
+	return nil 
 }

@@ -57,3 +57,10 @@ type ListUserResponse struct {
 	TotalCount int64       `json:"totalCount"`
 	Users      []*UserInfo `json:"users"`
 }
+
+// 更新用户信息：请求参数
+type UpdateUserRequest struct {
+	Nickname *string `json:"nickname" valid:"stringlength(1|255)"`
+	Email *string `json:"email" valid:"email"`
+	Phone *string `json:"phone" valid:"stringlength(11|11)"`
+}

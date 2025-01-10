@@ -43,6 +43,9 @@ func installRouters(g *gin.Engine) error {
 			userv1.PUT(":name/change-password", uc.ChangePassword) // 修改密码
 			userv1.Use(mw.Authn(), mw.Authz(authz))                // 使用认证和鉴权中间件
 			userv1.GET(":name", uc.Get)                            // 获取用户详情信息
+			userv1.PUT(":name", uc.Update)    // 更新用户
+			userv1.GET("", uc.List)           // 列出用户列表，只有 root 用户才能访问
+			userv1.DELETE(":name", uc.Delete) // 删除用户
 		}
 	}
 
