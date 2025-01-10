@@ -13,7 +13,7 @@ service Auler {
     rpc ListUser(ListUserRequest) returns (ListUserResponse) {}
 }
 
-message UserInfo {
+message ≈ {
     string username = 1;         
     string nickname = 2;         
     string email = 4;         
@@ -21,7 +21,7 @@ message UserInfo {
     google.protobuf.Timestamp createdAt = 6;         
     google.protobuf.Timestamp updatedAt = 7;
     // 未开发
-    // int64 postCount = 8;         
+    int64 spellCount = 8;         
          
 }
 

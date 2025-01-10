@@ -32,6 +32,8 @@ type UserInfo struct {
 	Phone     string                 `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty"`
 	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
 	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
+
+	SpellCount  int64               `protobuf:"bytes,1,opt,name=spellCount,proto3" json:"spellCount,omitempty"`
 }
 
 func (x *UserInfo) Reset() {
@@ -106,6 +108,13 @@ func (x *UserInfo) GetUpdatedAt() *timestamppb.Timestamp {
 		return x.UpdatedAt
 	}
 	return nil
+}
+
+func (x *UserInfo) GetSpellCount() int64 {
+	if x != nil {
+		return x.SpellCount
+	}
+	return 0
 }
 
 // ListUserRequest 指定了 `ListUser` 接口的请求参数.

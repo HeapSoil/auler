@@ -3,7 +3,6 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 
-
 	"github.com/HeapSoil/auler/internal/pkg/errs"
 	"github.com/HeapSoil/auler/internal/pkg/log"
 )
