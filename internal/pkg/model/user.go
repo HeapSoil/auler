@@ -18,7 +18,7 @@ type UserM struct {
 	UpdatedAt time.Time `gorm:"column:updatedAt"`      //
 }
 
-// TableName sets the insert table name for this struct type
+// TableName 是 user 映射的 MySQL 表名
 func (u *UserM) TableName() string {
 	return "user"
 }
