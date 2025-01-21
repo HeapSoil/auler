@@ -1,10 +1,11 @@
 package middleware
 
 import (
+	"github.com/gin-gonic/gin"
+
 	"github.com/HeapSoil/auler/internal/pkg/errs"
 	"github.com/HeapSoil/auler/internal/pkg/utils"
 	"github.com/HeapSoil/auler/pkg/token"
-	"github.com/gin-gonic/gin"
 )
 
 // 认证方法Authn 中间件

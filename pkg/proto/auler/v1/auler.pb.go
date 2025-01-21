@@ -7,11 +7,12 @@
 package v1
 
 import (
+	reflect "reflect"
+	sync "sync"
+
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
-	reflect "reflect"
-	sync "sync"
 )
 
 const (
@@ -33,7 +34,7 @@ type UserInfo struct {
 	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
 	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
 
-	SpellCount  int64               `protobuf:"bytes,1,opt,name=spellCount,proto3" json:"spellCount,omitempty"`
+	SpellCount int64 `protobuf:"bytes,1,opt,name=spellCount,proto3" json:"spellCount,omitempty"`
 }
 
 func (x *UserInfo) Reset() {

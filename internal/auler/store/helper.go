@@ -1,5 +1,4 @@
-package store 
-
+package store
 
 const defaultLimitValue = 20
 
@@ -9,5 +8,5 @@ func defaultLimit(limit int) int {
 		limit = defaultLimitValue
 	}
 	return limit
-	
+
 }

@@ -1,9 +1,10 @@
 package user
 
 import (
+	"github.com/gin-gonic/gin"
+
 	"github.com/HeapSoil/auler/internal/pkg/errs"
 	"github.com/HeapSoil/auler/internal/pkg/log"
-	"github.com/gin-gonic/gin"
 )
 
 func (ctrl *UserController) Get(c *gin.Context) {

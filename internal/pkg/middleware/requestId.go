@@ -1,9 +1,10 @@
 package middleware
 
 import (
-	"github.com/HeapSoil/auler/internal/pkg/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+
+	"github.com/HeapSoil/auler/internal/pkg/utils"
 )
 
 func RequestID() gin.HandlerFunc {

@@ -7,9 +7,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/HeapSoil/auler/internal/pkg/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+
+	"github.com/HeapSoil/auler/internal/pkg/log"
 
 	pb "github.com/HeapSoil/auler/pkg/proto/auler/v1"
 )

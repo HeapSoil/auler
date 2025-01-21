@@ -4,13 +4,14 @@ import (
 	"context"
 	"errors"
 
+	"github.com/jinzhu/copier"
+	"gorm.io/gorm"
+
 	"github.com/HeapSoil/auler/internal/auler/store"
 	"github.com/HeapSoil/auler/internal/pkg/errs"
 	"github.com/HeapSoil/auler/internal/pkg/log"
 	"github.com/HeapSoil/auler/internal/pkg/model"
 	v1 "github.com/HeapSoil/auler/pkg/api/auler/v1"
-	"github.com/jinzhu/copier"
-	"gorm.io/gorm"
 )
 
 type SpellBiz interface {

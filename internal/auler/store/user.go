@@ -4,8 +4,9 @@ import (
 	"context"
 	"errors"
 
-	"github.com/HeapSoil/auler/internal/pkg/model"
 	"gorm.io/gorm"
+
+	"github.com/HeapSoil/auler/internal/pkg/model"
 )
 
 // user模块在store层所实现的方法

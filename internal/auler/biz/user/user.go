@@ -5,6 +5,9 @@ import (
 	"errors"
 	"regexp"
 
+	"github.com/jinzhu/copier"
+	"gorm.io/gorm"
+
 	"github.com/HeapSoil/auler/internal/auler/store"
 	"github.com/HeapSoil/auler/internal/pkg/errs"
 	"github.com/HeapSoil/auler/internal/pkg/log"
@@ -12,8 +15,6 @@ import (
 	v1 "github.com/HeapSoil/auler/pkg/api/auler/v1"
 	"github.com/HeapSoil/auler/pkg/auth"
 	"github.com/HeapSoil/auler/pkg/token"
-	"github.com/jinzhu/copier"
-	"gorm.io/gorm"
 )
 
 // 定义接口，接口具体实现，并确保接口具体实现已经实现了定义接口

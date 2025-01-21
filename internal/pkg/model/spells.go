@@ -3,8 +3,9 @@ package model
 import (
 	"time"
 
-	"github.com/HeapSoil/auler/pkg/id"
 	"gorm.io/gorm"
+
+	"github.com/HeapSoil/auler/pkg/id"
 )
 
 // SpellM 是数据库中 spell 记录 struct 格式的映射.

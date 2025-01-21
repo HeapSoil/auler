@@ -1,10 +1,11 @@
 package spell
 
 import (
+	"github.com/gin-gonic/gin"
+
 	"github.com/HeapSoil/auler/internal/pkg/errs"
 	"github.com/HeapSoil/auler/internal/pkg/log"
 	"github.com/HeapSoil/auler/internal/pkg/utils"
-	"github.com/gin-gonic/gin"
 )
 
 // 获取指定的咒语prompt

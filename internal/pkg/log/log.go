@@ -5,9 +5,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/HeapSoil/auler/internal/pkg/utils"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+
+	"github.com/HeapSoil/auler/internal/pkg/utils"
 )
 
 // auler的日志接口，只包含了所支持的日志记录方法

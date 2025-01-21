@@ -1,13 +1,14 @@
 package auler
 
 import (
+	"github.com/gin-gonic/gin"
+
 	"github.com/HeapSoil/auler/internal/auler/controller/v1/spell"
 	"github.com/HeapSoil/auler/internal/auler/controller/v1/user"
 	"github.com/HeapSoil/auler/internal/auler/store"
 	"github.com/HeapSoil/auler/internal/pkg/errs"
 	"github.com/HeapSoil/auler/internal/pkg/log"
 	"github.com/HeapSoil/auler/pkg/auth"
-	"github.com/gin-gonic/gin"
 
 	mw "github.com/HeapSoil/auler/internal/pkg/middleware"
 )

@@ -1,12 +1,14 @@
 package user
 
 import (
-	"github.com/HeapSoil/auler/internal/pkg/errs"
-	"github.com/HeapSoil/auler/internal/pkg/log"
 	"github.com/asaskevich/govalidator"
 
-	v1 "github.com/HeapSoil/auler/pkg/api/auler/v1"
+	"github.com/HeapSoil/auler/internal/pkg/errs"
+	"github.com/HeapSoil/auler/internal/pkg/log"
+
 	"github.com/gin-gonic/gin"
+
+	v1 "github.com/HeapSoil/auler/pkg/api/auler/v1"
 )
 
 const defaultMethods = "(GET)|(POST)|(PUT)|(DELETE)"

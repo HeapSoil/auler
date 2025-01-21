@@ -1,12 +1,13 @@
 package spell
 
 import (
+	"github.com/asaskevich/govalidator"
+	"github.com/gin-gonic/gin"
+
 	"github.com/HeapSoil/auler/internal/pkg/errs"
 	"github.com/HeapSoil/auler/internal/pkg/log"
 	"github.com/HeapSoil/auler/internal/pkg/utils"
 	v1 "github.com/HeapSoil/auler/pkg/api/auler/v1"
-	"github.com/asaskevich/govalidator"
-	"github.com/gin-gonic/gin"
 )
 
 func (ctrl *SpellController) Update(c *gin.Context) {

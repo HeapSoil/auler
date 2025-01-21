@@ -3,8 +3,9 @@ package model
 import (
 	"time"
 
-	"github.com/HeapSoil/auler/pkg/auth"
 	"gorm.io/gorm"
+
+	"github.com/HeapSoil/auler/pkg/auth"
 )
 
 type UserM struct {

@@ -5,11 +5,12 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+
 	"github.com/HeapSoil/auler/internal/auler/store"
 	"github.com/HeapSoil/auler/internal/pkg/log"
 	"github.com/HeapSoil/auler/pkg/db"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 const (

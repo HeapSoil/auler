@@ -44,7 +44,6 @@ type ChangePasswordRequest struct {
 // GetUserResponse：指定了 `GET /v1/users/{name}` 接口的返回参数.
 type GetUserResponse UserInfo
 
-
 // 罗列用户: 指定请求参数和返回参数
 // ListUserRequest: 指定了 `GET /v1/users` 接口的请求参数.
 type ListUserRequest struct {
@@ -61,6 +60,6 @@ type ListUserResponse struct {
 // 更新用户信息：请求参数
 type UpdateUserRequest struct {
 	Nickname *string `json:"nickname" valid:"stringlength(1|255)"`
-	Email *string `json:"email" valid:"email"`
-	Phone *string `json:"phone" valid:"stringlength(11|11)"`
+	Email    *string `json:"email" valid:"email"`
+	Phone    *string `json:"phone" valid:"stringlength(11|11)"`
 }

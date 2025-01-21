@@ -15,8 +15,13 @@ ROOT_PACKAGE=github.com/HeapSoil/auler
 # Protobuf 文件存放路径
 APIROOT=$(ROOT_DIR)/pkg/proto
 
+ifeq ($(origin TMP_DIR),undefined)
+TMP_DIR := $(OUTPUT_DIR)/tmp
+$(shell mkdir -p $(TMP_DIR))
+endif
+
 # ==============================================================================
-# 定义版本相关变量
+# TODO: 定义版本相关变量
 
 ## 指定应用使用的 version 包，会通过 `-ldflags -X` 向该包中指定的变量注入值
 VERSION_PACKAGE=github.com/HeapSoil/auler/pkg/version
@@ -43,6 +48,7 @@ GO_LDFLAGS += \
 PLATFORMS ?= darwin_amd64 windows_amd64 linux_amd64 linux_arm64
 
 # 设置一个指定的操作系统
+# 构建镜像时，使用 linux 作为默认的 OS
 ifeq ($(origin PLATFORM), undefined)
 	ifeq ($(origin GOOS), undefined)
 		GOOS := $(shell go env GOOS)
@@ -51,9 +57,11 @@ ifeq ($(origin PLATFORM), undefined)
 		GOARCH := $(shell go env GOARCH)
 	endif
 	PLATFORM := $(GOOS)_$(GOARCH)
+	IMAGE_PLAT := linux_$(GOARCH) 
 else
 	GOOS := $(word 1, $(subst _, ,$(PLATFORM)))
 	GOARCH := $(word 2, $(subst _, ,$(PLATFORM)))
+	IMAGE_PLAT := $(PLATFORM)
 endif
 
 # Makefile 设置
