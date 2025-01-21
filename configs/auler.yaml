@@ -7,14 +7,24 @@ jwt-secret: Rtg8BPKNEf2mB4mgvKONGPZZQSaJWNLijxR42qRgq0iBb5 # JWT 签发密钥
 grpc:
   addr: :9090 # gRPC 服务器监听地址
 db:
-  host: 127.0.0.1  # MySQL 机器 IP 和端口，默认 127.0.0.1:3306
-  username: auler # MySQL 用户名(建议授权最小权限集)
+  host: 101.35.228.21  # 容器可访问的 IP 地址
+  username: docker # MySQL 用户名(建议授权最小权限集)
   password: auler1234 # MySQL 用户密码
   database: auler # auler 系统所用的数据库名
   max-idle-connections: 100 # MySQL 最大空闲连接数，默认 100
   max-open-connections: 100 # MySQL 最大打开的连接数，默认 100
   max-connection-life-time: 10s # 空闲连接最大存活时间，默认 10s
   log-level: 4 # GORM log level, 1: silent, 2:error, 3:warn, 4:info
+  
+  # local ms=ysql deployment config: 
+  # host: 127.0.0.1  # MySQL 机器 IP 和端口，默认 127.0.0.1:3306
+  # username: auler # MySQL 用户名(建议授权最小权限集)
+  # password: auler1234 # MySQL 用户密码
+  # database: auler # auler 系统所用的数据库名
+  # max-idle-connections: 100 # MySQL 最大空闲连接数，默认 100
+  # max-open-connections: 100 # MySQL 最大打开的连接数，默认 100
+  # max-connection-life-time: 10s # 空闲连接最大存活时间，默认 10s
+  # log-level: 4 # GORM log level, 1: silent, 2:error, 3:warn, 4:info
 
 
 # 日志配置
@@ -28,6 +38,8 @@ log:
 # HTTPS 配置
 tls:
   addr: :8443 # 服务器监听地址
-  cert: ./_output/cert/server.crt # 服务端证书
-  key: ./_output/cert/server.key # 服务端私钥
+  # cert: ./_output/cert/server.crt # 服务端证书
+  # key: ./_output/cert/server.key # 服务端私钥
+  cert: /etc/auler/cert/server.crt # 服务端证书
+  key: /etc/auler/cert/server.key # 服务端私钥
 
