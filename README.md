@@ -5,7 +5,7 @@ A minimal golang backend for building a agent platform with basic functionalitie
 ## Features
 - Utilizes a clean and straightforward architecture.
 - Employs widely-used Go packages:
-    - gorm, 
+    - gorm
     - govalidator
     - gin
     - cobra
