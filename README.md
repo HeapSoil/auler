@@ -12,7 +12,7 @@ A minimal golang backend for building a agent platform with basic functionalitie
     - zap
     - pprof
     - grpc
-    - protobuf.
+    - protobuf
 - JWT-based authentication and Casbin-based authorization.
 - Independently designed log and error packages.
 - HTTP, HTTPS, and gRPC servers implementations with JSON and Protobuf for data exchange.
