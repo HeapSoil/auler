@@ -34,8 +34,8 @@ func NewAulerCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		// 命令的名字，长短描述
 		Use:   "auler",
-		Short: "A demo scheduler project",
-		Long:  "A demo scheduler project, aiming to coordinate distributed tasks",
+		Short: "A demo platform project",
+		Long:  "A demo platform project with minimal backend",
 		// 命令出错时处理， 保持命令出错时一眼就能看到错误信息
 		SilenceUsage: true,
 		// Run函数
