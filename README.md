@@ -10,7 +10,6 @@ A minimal golang backend for building a agent platform with basic functionalitie
     - gin
     - cobra
     - zap
-    - pprof
     - grpc
     - protobuf
 - JWT-based authentication and Casbin-based authorization.
